@@ -57,6 +57,63 @@ Unlike typical Jupyter Notebook student projects, this platform is built like a 
 └── requirements.txt        # Python dependencies
 ```
 
+## 📂 File Structure
+
+```text
+FlyRankMLoopS\
+├── .env                          (existing — user fills API key + base_url)
+├── requirements.txt              [NEW]
+│
+├── Datasets/                     (existing CSVs)
+├── data/
+│   ├── processed/                [NEW] cleaned features written here
+│   └── embeddings/               [NEW] ChromaDB persisted here
+│
+├── MLModels/
+│   ├── Regression1.py            (existing)
+│   ├── TreeClassify.py           (existing — will be completed)
+│   └── train_pipeline.py         [NEW] full training pipeline: RF + XGBoost + MLflow
+│
+├── feature_pipeline/
+│   ├── _init_.py               [NEW]
+│   ├── engineer.py               [NEW] feature engineering + derived features
+│   └── leakage_audit.py          [NEW] leakage detection + time-based split
+│
+├── Agents/
+│   ├── model.py                  (existing — FIXED: correct dotenv + openai init)
+│   ├── RAG.py                    (existing — REBUILT: ChromaDB + proper retriever)
+│   ├── chains.py                 (existing — FIXED: correct imports)
+│   └── seo_agent.py              [NEW] single unified AI agent (SEO + content + decision)
+│
+├── rag/
+│   ├── _init_.py               [NEW]
+│   ├── knowledge_base.py         [NEW] SEO guidelines + brand knowledge embeddings
+│   └── retriever.py              [NEW] ChromaDB retriever wrapper
+│
+├── backend/
+│   ├── _init_.py               [NEW]
+│   ├── main.py                   [NEW] FastAPI app with all endpoints
+│   ├── schemas.py                [NEW] Pydantic request/response models
+│   └── services/
+│       ├── predict_service.py    [NEW] ML prediction service
+│       ├── rag_service.py        [NEW] RAG query service
+│       └── agent_service.py      [NEW] AI agent orchestration
+│
+├── mlops/
+│   ├── mlflow_config.py          [NEW] MLflow experiment setup
+│   ├── monitoring.py             [NEW] Evidently drift reports
+│   └── docker-compose.yml        [NEW] full stack orchestration
+│
+├── frontend/
+│   ├── index.html                [NEW] React SPA (single file, no build step needed)
+│   ├── app.js                    [NEW] React via CDN
+│   └── styles.css                [NEW] premium dark design
+│
+└── notebooks/
+    └── exploration.ipynb         [NEW] optional EDA notebook
+```
+
+
 ---
 
 ## ⚙️ Setup & Installation
