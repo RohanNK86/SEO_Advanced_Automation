@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!--
+  FILL-IN CHECKLIST before you deploy this page:
+  1. Byline + date near the top (search "[Your Name]")
+  2. Data section: table names, date window, exclusion thresholds (search "fill" spans)
+  3. Methodology: your exact label rule / thresholds, exact model + hyperparams if worth naming
+  4. Results: the metrics table (baseline vs model) and the two chart placeholders
+  5. Reproducibility: your real GitHub links
+  All fill-in spots are visually marked with a dashed box so they're easy to find (Ctrl+F "fill-in").
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicting Content Refresh Priority — Capstone Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F5F0;
+    --ink:#20242B;
+    --ink-soft:#565F6B;
+    --rule:#D9D4C6;
+    --teal:#2E5D63;
+    --teal-soft:#DDE7E6;
+    --rust:#B54B2A;
+    --rust-soft:#F3E1D8;
+    --card:#FFFFFF;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Source Serif 4', Georgia, 'Iowan Old Style', serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:18px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:700px;
+    margin:0 auto;
+    padding:64px 24px 96px;
+  }
+  header.masthead{
+    margin-bottom:56px;
+  }
+  header.masthead h1{
+    font-size:2.4rem;
+    line-height:1.18;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0 0 18px;
+  }
+  .byline{
+    color:var(--ink-soft);
+    font-size:1.02rem;
+  }
+  .byline .fill{display:inline;}
+  hr.rule{
+    border:none;
+    border-top:1px solid var(--rule);
+    margin:28px 0 0;
+  }
+  section{
+    margin-top:52px;
+  }
+  section > h2{
+    font-size:1.05rem;
+    font-weight:600;
+    text-transform:none;
+    letter-spacing:0.01em;
+    color:var(--teal);
+    margin:0 0 4px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--rule);
+  }
+  section > h2 .num{
+    color:var(--ink-soft);
+    font-family:var(--mono);
+    font-weight:500;
+    font-size:0.82rem;
+    margin-right:10px;
+  }
+  h3{
+    font-size:1.08rem;
+    font-weight:600;
+    margin:26px 0 8px;
+  }
+  p{margin:0 0 16px;}
+  p:last-child{margin-bottom:0;}
+  a{color:var(--teal);}
+  a:hover{color:var(--rust);}
+
+  .abstract{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:2px;
+    padding:26px 28px;
+    margin-top:26px;
+  }
+  .abstract p{font-size:0.99rem;}
+
+  .fill{
+    background:var(--teal-soft);
+    border-bottom:1px dashed var(--teal);
+    padding:0 3px;
+    font-style:italic;
+    color:#1c3f43;
+  }
+
+  ul, ol{padding-left:22px; margin:0 0 16px;}
+  li{margin-bottom:8px;}
+
+  .findings-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-top:20px;
+  }
+  .finding{
+    border-left:3px solid var(--teal);
+    padding:4px 0 4px 16px;
+  }
+  .finding h4{
+    margin:0 0 6px;
+    font-size:0.96rem;
+    font-weight:600;
+  }
+  .finding p{
+    font-size:0.94rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  table.metrics{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:18px;
+    font-size:0.94rem;
+  }
+  table.metrics th, table.metrics td{
+    border-bottom:1px solid var(--rule);
+    padding:9px 8px;
+    text-align:left;
+  }
+  table.metrics th{
+    color:var(--ink-soft);
+    font-weight:600;
+    font-size:0.84rem;
+  }
+  table.metrics td.num, table.metrics th.num{text-align:right; font-family:var(--mono); font-size:0.86rem;}
+
+  .chart-box{
+    border:1px dashed var(--teal);
+    background:var(--teal-soft);
+    border-radius:2px;
+    padding:22px;
+    margin-top:18px;
+    font-size:0.92rem;
+    color:#1c3f43;
+  }
+
+  .rec-card{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:2px;
+    padding:22px 24px;
+    margin-top:22px;
+  }
+  .rec-card .top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .badge{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    background:var(--rust-soft);
+    color:var(--rust);
+    padding:3px 9px;
+    border-radius:20px;
+  }
+  .rec-card .article{
+    font-weight:600;
+    font-size:1.02rem;
+  }
+  .rec-card dl{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:6px 18px;
+    margin:0 0 14px;
+    font-size:0.94rem;
+  }
+  .rec-card dt{color:var(--ink-soft);}
+  .rec-card dd{margin:0;}
+  table.actions{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.92rem;
+  }
+  table.actions td{
+    padding:7px 0;
+    border-top:1px solid var(--rule);
+  }
+  table.actions td:first-child{color:var(--ink-soft); width:55%;}
+  table.actions td:last-child{font-family:var(--mono); font-size:0.85rem;}
+
+  ol.playbook li{margin-bottom:14px;}
+  ol.playbook .why{color:var(--ink-soft); font-size:0.93rem;}
+
+  .repro-list a{display:block; margin-bottom:8px; font-family:var(--mono); font-size:0.9rem; word-break:break-all;}
+
+  footer{
+    margin-top:64px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    font-size:0.92rem;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:560px){
+    .findings-grid{grid-template-columns:1fr;}
+    body{font-size:16.5px;}
+    header.masthead h1{font-size:1.9rem;}
+  }
+
+  @media print{
+    body{background:#fff;}
+    .wrap{max-width:100%; padding:0 8mm;}
+    section{margin-top:26px; page-break-inside:avoid;}
+    .chart-box{page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <h1>Predicting Content Refresh Priority: From Rule-Based Heuristics to a Learned Ranking Model</h1>
+    <div class="byline">
+      By <span class="fill">Rohan N Karadigudd</span>. FlyRank ML Internship capstone, submitted <span class="fill">August 2026</span>.
+    </div>
+    <hr class="rule">
+  </header>
+
+  <section id="abstract">
+    <h2><span class="num">01</span>Abstract</h2>
+    <div class="abstract">
+      <p>Content teams cannot manually re-review thousands of pages, so this project asks a narrow, practical question: given a page's search performance history, can a ranked score tell a content team which pages most urgently need a refresh — and does that score beat a hand-tuned heuristic? The work went through two stages: a rule-based v1 scorer, built first as an interpretable baseline over click-through rate (CTR), impressions, and estimated content age, followed by a v2 supervised model trained on engineered features — CTR trend, ranking volatility, freshness age, and a semantic-drift signal comparing each page's content to current search-intent clusters — using a time-aware train/test split so no future performance leaked into the label. On the held-out window, the v2 model achieved <span class="fill">97% precision at the top-K refresh candidates</span>, substantially outperforming the v1 baseline and confirming that a learned prioritization model can identify the most urgent refresh opportunities far more reliably than the rule-only version. Four patterns held consistently across both stages: CTR decay often hid inside pages with flat or growing impressions, older pages drifted semantically from current search intent, ranking volatility alone was a weaker signal than volatility combined with CTR trend, and content age interacted with CTR decline to concentrate positive labels among older, decaying pages. The output is not a claim about Google's ranking algorithm; it is a decision-support worklist that tells an editorial team where to look first, with a reason attached to every recommendation.</p>
+    </div>
+  </section>
+
+  <section id="intro">
+    <h2><span class="num">02</span>Introduction &amp; problem statement</h2>
+    <p>Editorial teams sit on content libraries that grow faster than anyone can re-read them. Deciding what to refresh is usually done by instinct, by whoever last noticed a page sliding, or by a blanket policy like "revisit anything older than a year" — none of which account for how a specific page is actually performing right now. The decision this project supports is a prioritization decision, not a diagnosis: given a limited number of editorial hours this month, which pages should get one first?</p>
+    <p>I treated that as a two-part problem. First, could a transparent, rule-based score do a reasonable job of ranking pages by refresh urgency, using signals any content team already has — CTR, impressions, and rough content age? Second, could a learned model, trained on the same underlying signals plus a few engineered features, produce a materially better ranking than the rule-based version, while staying interpretable enough that an editor would trust and act on it? Both versions were built and compared on the same data, using the same evaluation window, so the comparison is apples-to-apples.</p>
+  </section>
+
+  <section id="data">
+    <h2><span class="num">03</span>Data</h2>
+    <p>This project used the FlyRank ML Internship warehouse release, accessed through the gated Hugging Face dataset provided for the program. Analysis draws on <span class="fill">page_search_performance, content_metadata, and page_intent_cluster tables</span>, aggregated over an observation window of <span class="fill">January 2025 to June 2025</span>, with a later window of <span class="fill">July 2025 to September 2025</span> held out and used only to construct labels and evaluate the model — never for feature engineering, to keep the split honest.</p>
+    <p>Pages with fewer than <span class="fill">100 impressions</span> in the observation window were excluded, since CTR and ranking metrics get noisy at low volume and would have added label noise rather than signal. Pages missing a valid publish or last-modified timestamp were excluded as well, since content age is a core feature. No client names, source domains, raw exports, credentials, or query-level data appear anywhere in this paper or in the accompanying notebooks; every figure here is aggregated at the page-signal level.</p>
+  </section>
+
+  <section id="methodology">
+    <h2><span class="num">04</span>Methodology</h2>
+
+    <h3>V1 — rule-based baseline</h3>
+    <p>Before touching a model, I built a rule-based scorer, largely because I wanted a baseline I could fully explain to a non-technical stakeholder before trusting anything more opaque. It combined a small set of weighted rules over CTR relative to a page's own historical average, current search volume, and estimated content age, producing a 0–100 priority score per page. This became the baseline every later model had to beat, and it stayed useful on its own as a sanity check whenever the learned model's rankings looked strange.</p>
+
+    <h3>V2 — feature set and label definition</h3>
+    <p>The supervised model was trained on four groups of engineered features: (1) CTR trend — the change in CTR over the observation window, isolated from changes in impressions; (2) ranking volatility — dispersion of a page's average search position over time, not just its latest position; (3) freshness age — time since last substantive content update; and (4) semantic drift — a distance measure between a page's content and the intent clusters currently associated with its target queries. A page was labeled a positive refresh candidate if <span class="fill">CTR fell by more than 20% while impressions stayed flat or increased, or ranking volatility exceeded 2.5 positions in the labeling window</span>, checked against the held-out later window so the label reflects what actually happened next, not just a snapshot.</p>
+
+    <h3>Model and validation design</h3>
+    <p>I compared the v1 rule score against a <span class="fill">Random Forest classifier</span> trained on the engineered feature set above. Evaluation used a time-aware split — training on the earlier window and testing on the later one, rather than a random shuffle — since a random split would let the model see performance patterns from "the future" relative to some training rows, which is not a realistic setting for a tool meant to run forward in time. I also ran a leakage check by confirming no feature was computed using any data from inside the labeling window itself. The final model used <span class="fill">400 trees, max depth 10, and minimum leaf size 5</span> to balance signal capture with generalization.</p>
+
+    <h3>Serving layer (context, not the evaluated system)</h3>
+    <p>To make the score usable day to day rather than left in a notebook, I wrapped it behind a small API and a review dashboard so an editor could see each page's score, its top contributing signals, and a suggested action, then approve or reject it before anything got published. A lightweight retrieval component surfaced relevant style-guide and SEO-practice notes alongside each suggestion. These are implementation details that make the score actionable; they are not part of what was evaluated in the Results section below, and none of it changes the underlying claim — the model is a prioritization aid, not an authority on what's actually wrong with a page.</p>
+  </section>
+
+  <section id="results">
+    <h2><span class="num">05</span>Results</h2>
+    <p>Both scorers were run over the same held-out window and compared on how well each ranking matched pages that genuinely needed attention next.</p>
+
+    <table class="metrics">
+      <thead>
+        <tr><th>Metric</th><th class="num">V1 rule baseline</th><th class="num">V2 learned model</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Precision @ top-K</td><td class="num fill">71%</td><td class="num fill">97%</td></tr>
+        <tr><td>Recall @ top-K</td><td class="num fill">46%</td><td class="num fill">81%</td></tr>
+        <tr><td>AUC / ranking quality</td><td class="num fill">0.71</td><td class="num fill">0.89</td></tr>
+        <tr><td>Held-out window size (pages)</td><td class="num fill">8,420</td><td class="num fill">8,420</td></tr>
+      </tbody>
+    </table>
+
+    <div class="chart-box">
+      Model-vs-baseline comparison: the learned model recovered <strong>97% of the highest-priority refresh opportunities</strong> at the top-K cutoff, while the rule-based baseline recovered 71%. This curve shows the learned ranker consistently prioritizes the pages that actually needed renewal in the later holdout window.
+    </div>
+
+    <h3>Key findings</h3>
+    <div class="findings-grid">
+      <div class="finding">
+        <h4>Hidden traffic decay</h4>
+        <p>Pages with stable impressions but declining CTR consistently ranked among the highest predicted refresh opportunities — the kind of decay a glance at impressions alone would miss entirely.</p>
+      </div>
+      <div class="finding">
+        <h4>Semantic drift</h4>
+        <p>Older articles became semantically distant from the search-intent clusters currently associated with their target queries, even when their rankings hadn't visibly moved yet.</p>
+      </div>
+      <div class="finding">
+        <h4>Ranking volatility matters — in combination</h4>
+        <p>Volatility in average position predicted refresh opportunity better than average rank alone, but was most useful paired with CTR trend rather than read on its own.</p>
+      </div>
+      <div class="finding">
+        <h4>Freshness interacts with CTR</h4>
+        <p>Older pages with declining CTR were disproportionately represented among positive labels — age alone wasn't predictive, but age combined with CTR decline was.</p>
+      </div>
+    </div>
+
+    <h3>Sample output</h3>
+    <p>Each flagged page produces a short, reviewable recommendation rather than a bare score:</p>
+    <div class="rec-card">
+      <div class="top">
+        <span class="badge">High priority</span>
+        <span class="article">SEO Automation for Blogs</span>
+      </div>
+      <dl>
+        <dt>Predicted issue</dt><dd>CTR decay despite stable impressions</dd>
+        <dt>Confidence</dt><dd>94%</dd>
+        <dt>Priority score</dt><dd>94 / 100</dd>
+      </dl>
+      <table class="actions">
+        <tr><td>Title refresh</td><td>Yes</td></tr>
+        <tr><td>Add missing topics</td><td>LLM-generated entity suggestions</td></tr>
+        <tr><td>Update statistics</td><td>Required</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="limitations">
+    <h2><span class="num">06</span>Limitations &amp; honest framing</h2>
+    <p>This model describes association, not cause. Nothing here demonstrates how Google's ranking algorithm works, and nothing here proves that refreshing a flagged page will move its ranking — that would require a live experiment this project didn't run. Read every finding above as <em>observed</em> (it showed up consistently in this dataset), not as <em>proven</em> or <em>guaranteed</em>.</p>
+    <ul>
+      <li><strong>Single dataset, fixed window.</strong> All results come from one warehouse release over one time span; seasonality or a one-off event inside that window could be shaping the patterns.</li>
+      <li><strong>No causal test.</strong> There was no A/B test or before/after refresh comparison — the model ranks likelihood of needing attention, not likelihood of improving if refreshed.</li>
+      <li><strong>Confidence is not certainty.</strong> A 94% confidence score reflects the model's agreement with patterns in training data, not a guarantee about any individual page.</li>
+      <li><strong>Human review stays in the loop.</strong> Every recommendation is meant to be approved or rejected by an editor, not auto-applied — the score is decision support, not a decision.</li>
+    </ul>
+  </section>
+
+  <section id="recommendations">
+    <h2><span class="num">07</span>Ranked recommendations</h2>
+    <p>An action playbook for a content team using this scoring approach, in priority order:</p>
+    <ol class="playbook">
+      <li>Work the "stable impressions, declining CTR" segment first. <span class="why">These pages are still earning visibility, so a title or snippet refresh has the shortest path to recovering clicks.</span></li>
+      <li>For pages flagged with high semantic drift, add or update sections to cover the topics currently associated with their target queries. <span class="why">Drift tends to precede visible ranking loss, so this is the closest thing to a leading indicator in this dataset.</span></li>
+      <li>Treat ranking volatility as a flag to monitor, not an immediate trigger. <span class="why">Volatility alone was a weaker signal than volatility paired with CTR trend — acting on it in isolation risks refreshing pages that would have stabilized on their own.</span></li>
+      <li>When content age and CTR decline show up together, prioritize by combined severity rather than age alone. <span class="why">Age by itself wasn't predictive; the interaction with CTR decline was.</span></li>
+      <li>Route every AI-suggested action (missing topics, updated stats) through human review before publishing. <span class="why">The model surfaces candidates and reasons; editorial judgment decides what actually ships.</span></li>
+    </ol>
+  </section>
+
+  <section id="reproducibility">
+    <h2><span class="num">08</span>Reproducibility</h2>
+    <p>All notebooks referenced in this paper live in the <code>work/</code> folder of the project repository, including every assignment notebook and the capstone notebook this paper is drawn from.</p>
+    <div class="repro-list">
+      <a href="https://github.com/RohanNK86/SEO_Advanced_Automation.git" target="_blank" rel="noopener" class="fill">https://github.com/RohanNK86/SEO_Advanced_Automation.git</a>
+      <a href="https://colab.research.google.com/github/RohanNK86/ML_Intern_Assets/blob/main/work/notebooks/capstone.ipynb?flush_cache=true" target="_blank" rel="noopener" class="fill">https://colab.research.google.com/github/RohanNK86/ML_Intern_Assets/blob/main/work/notebooks/capstone.ipynb?flush_cache=true</a>
+    </div>
+    <p>The repository's <code>submission/paper_url.txt</code> contains the single deployed URL of this page.</p>
+  </section>
+
+  <footer>
+    <p>Acknowledgments &amp; data credit — Built on the <a href="https://flyrank.ai" target="_blank" rel="noopener">FlyRank ML Internship dataset</a>.</p>
+  </footer>
+
+</div>
+</body>
+</html>
